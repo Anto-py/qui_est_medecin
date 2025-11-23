@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qui est médecin ? - Détection des biais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .phase-indicator {
+            background: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .image-container {
+            margin: 30px auto;
+            max-width: 400px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .counter {
+            font-size: 1.2em;
+            color: #666;
+            margin: 20px 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-medecin {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-medecin:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .btn-pas-medecin {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-pas-medecin:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .btn-next {
+            background: #667eea;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .btn-next:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .result-card {
+            border-radius: 10px;
+            padding: 10px;
+            position: relative;
+        }
+
+        .result-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .result-correct {
+            background: #d1fae5;
+            border: 3px solid #10b981;
+        }
+
+        .result-incorrect {
+            background: #fee2e2;
+            border: 3px solid #ef4444;
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .bias-analysis {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+            border-radius: 10px;
+        }
+
+        .bias-analysis h3 {
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+
+        .bias-analysis p {
+            color: #78350f;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .ai-prediction {
+            background: #dbeafe;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+            border-radius: 10px;
+        }
+
+        .ai-prediction h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+
+        .ai-rule {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            color: #1e40af;
+            margin: 10px 0;
+        }
+
+        .discussion-questions {
+            background: #f3e8ff;
+            border-left: 5px solid #a855f7;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+            border-radius: 10px;
+        }
+
+        .discussion-questions h3 {
+            color: #6b21a8;
+            margin-bottom: 15px;
+        }
+
+        .discussion-questions ul {
+            list-style-position: inside;
+            color: #7c3aed;
+        }
+
+        .discussion-questions li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .intro-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #444;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .score-excellent {
+            background: #10b981;
+            color: white;
+        }
+
+        .score-good {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .score-attention {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .score-critique {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Phase 1: Introduction -->
+        <div id="intro" class="phase fade-in">
+            <h1>🩺 Qui est médecin ?</h1>
+            <p class="subtitle">Un jeu pour révéler tes biais (et ceux de l'IA)</p>
+            
+            <div class="intro-text">
+                <p><strong>📋 Les règles :</strong></p>
+                <p>Tu vas voir 14 photos de personnes. Certaines sont médecins, d'autres non.</p>
+                <p>Pour chaque photo, tu dois décider rapidement : <strong>MÉDECIN</strong> ou <strong>PAS MÉDECIN</strong>.</p>
+                <br>
+                <p><strong>⚠️ Attention :</strong> Ce n'est pas parce que quelqu'un porte une blouse qu'il/elle est médecin... et ce n'est pas parce que quelqu'un est en tenue de ville qu'il/elle ne l'est pas !</p>
+                <br>
+                <p><strong>🎯 L'objectif :</strong> Découvrir tes propres stéréotypes et comprendre comment une IA pourrait les apprendre.</p>
+            </div>
+            
+            <button class="btn-next" onclick="startGame()">Commencer le jeu</button>
+        </div>
+
+        <!-- Phase 2: Jeu -->
+        <div id="game" class="phase hidden">
+            <div class="phase-indicator">Phase 1 : Tes choix</div>
+            <div class="counter" id="counter">Photo 1/14</div>
+            
+            <div class="image-container">
+                <img id="currentImage" src="" alt="Personne à identifier">
+            </div>
+            
+            <div class="buttons">
+                <button class="btn-medecin" onclick="makeChoice(true)">✓ MÉDECIN</button>
+                <button class="btn-pas-medecin" onclick="makeChoice(false)">✗ PAS MÉDECIN</button>
+            </div>
+        </div>
+
+        <!-- Phase 3: Résultats -->
+        <div id="results" class="phase hidden">
+            <div class="phase-indicator">Phase 2 : Le reveal</div>
+            <h2>Tes résultats</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-number" id="scorePercent">0%</div>
+                    <div class="stat-label">de bonnes réponses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Biais détecté</div>
+                    <div class="stat-number" id="biasScore">0</div>
+                    <div class="stat-label">points de stéréotype</div>
+                </div>
+            </div>
+
+            <div id="scoreInterpretation"></div>
+            
+            <div class="results-grid" id="resultsGrid"></div>
+            
+            <button class="btn-next" onclick="showBiasAnalysis()">Analyser mes biais</button>
+        </div>
+
+        <!-- Phase 4: Analyse des biais -->
+        <div id="biasAnalysis" class="phase hidden">
+            <div class="phase-indicator">Phase 3 : Analyse de tes biais</div>
+            <h2>🔍 Ce que tes choix révèlent</h2>
+            
+            <div id="biasContent"></div>
+            
+            <button class="btn-next" onclick="showAIPrediction()">Et si une IA apprenait de mes choix ?</button>
+        </div>
+
+        <!-- Phase 5: Prédiction IA -->
+        <div id="aiPrediction" class="phase hidden">
+            <div class="phase-indicator">Phase 4 : L'IA formée sur tes biais</div>
+            <h2>🤖 Si une IA était entraînée sur TES réponses...</h2>
+            
+            <div class="ai-prediction">
+                <h3>Elle créerait cette règle :</h3>
+                <div class="ai-rule" id="aiRule"></div>
+                <p style="margin-top: 15px;"><strong>Conséquence :</strong> <span id="aiConsequence"></span></p>
+            </div>
+            
+            <button class="btn-next" onclick="showDiscussion()">Discutons-en</button>
+        </div>
+
+        <!-- Phase 6: Questions de discussion -->
+        <div id="discussion" class="phase hidden">
+            <div class="phase-indicator">Phase 5 : Discussion guidée</div>
+            <h2>💭 Questions pour réfléchir</h2>
+            
+            <div class="discussion-questions">
+                <h3>À discuter en groupe :</h3>
+                <ul>
+                    <li>D'où viennent ces stéréotypes que tu as utilisés pour juger ?</li>
+                    <li>Si cette IA était utilisée pour trier des CV de médecins, qui serait discriminé ?</li>
+                    <li>Comment les vraies IA apprennent-elles ces biais ?</li>
+                    <li>Qui décide des données sur lesquelles on entraîne une IA ?</li>
+                    <li>Peut-on créer une IA "neutre" ? Est-ce seulement possible ?</li>
+                </ul>
+            </div>
+
+            <div class="bias-analysis">
+                <h3>📚 Ce qu'il faut retenir</h3>
+                <p><strong>1. Les IA ne font qu'apprendre ce qu'on leur montre.</strong> Si tu lui montres uniquement des hommes blancs en blouse comme médecins, elle reproduira ce biais.</p>
+                <p><strong>2. Nos stéréotypes sont inconscients.</strong> Tu ne le fais pas exprès, mais ton cerveau utilise des raccourcis basés sur ce qu'il voit le plus souvent dans les médias, les séries, etc.</p>
+                <p><strong>3. Les conséquences sont réelles.</strong> Des IA biaisées sont utilisées pour recruter, diagnostiquer, accorder des prêts... et discriminent des millions de personnes.</p>
+            </div>
+            
+            <button class="btn-next" onclick="restart()">Recommencer le jeu</button>
+        </div>
+    </div>
+
+    <script>
+        // Base de données des images avec leurs métadonnées
+        const images = [
+            { src: 'femme_afro_blouse_me_decin.avif', isDoctor: true, gender: 'femme', ethnicity: 'afro', attire: 'blouse' },
+            { src: 'femme_afro_blouse.jpg', isDoctor: false, gender: 'femme', ethnicity: 'afro', attire: 'blouse' },
+            { src: 'femme_blanche_tenue_de_ville_medecin.jpg', isDoctor: true, gender: 'femme', ethnicity: 'blanche', attire: 'ville' },
+            { src: 'femme_blanche_tenue_de_ville.jpg', isDoctor: false, gender: 'femme', ethnicity: 'blanche', attire: 'ville' },
+            { src: 'femme_voile_e_medecin.webp', isDoctor: true, gender: 'femme', ethnicity: 'voilée', attire: 'ville' },
+            { src: 'homme_afro_blouse_medecin.jpg', isDoctor: true, gender: 'homme', ethnicity: 'afro', attire: 'blouse' },
+            { src: 'homme_afro_tenue_de_ville_medecin.jpg', isDoctor: true, gender: 'homme', ethnicity: 'afro', attire: 'ville' },
+            { src: 'homme_blanc_blouse_me_decin_1.jpg', isDoctor: true, gender: 'homme', ethnicity: 'blanc', attire: 'blouse' },
+            { src: 'homme_blanc_blouse_me_decin_2.jpg', isDoctor: true, gender: 'homme', ethnicity: 'blanc', attire: 'blouse' },
+            { src: 'homme_blanc_blouse_me_decin_3.webp', isDoctor: true, gender: 'homme', ethnicity: 'blanc', attire: 'blouse' },
+            { src: 'homme_blanc_blouse_me_decin.jpg', isDoctor: true, gender: 'homme', ethnicity: 'blanc', attire: 'blouse' },
+            { src: 'homme_blanc_blouse.jpg', isDoctor: false, gender: 'homme', ethnicity: 'blanc', attire: 'blouse' },
+            { src: 'homme_blanc_blouse.webp', isDoctor: false, gender: 'homme', ethnicity: 'blanc', attire: 'blouse' },
+            { src: 'homme_blanc_tenue_de_ville.jpg', isDoctor: false, gender: 'homme', ethnicity: 'blanc', attire: 'ville' }
+        ];
+
+        let currentIndex = 0;
+        let userChoices = [];
+        let startTime;
+
+        function startGame() {
+            document.getElementById('intro').classList.add('hidden');
+            document.getElementById('game').classList.remove('hidden');
+            shuffleArray(images);
+            showImage();
+            startTime = Date.now();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function showImage() {
+            const img = images[currentIndex];
+            document.getElementById('currentImage').src = img.src;
+            document.getElementById('counter').textContent = `Photo ${currentIndex + 1}/${images.length}`;
+        }
+
+        function makeChoice(choice) {
+            const responseTime = Date.now() - startTime;
+            userChoices.push({
+                image: images[currentIndex],
+                userSaid: choice,
+                correct: choice === images[currentIndex].isDoctor,
+                responseTime: responseTime
+            });
+
+            currentIndex++;
+            startTime = Date.now();
+
+            if (currentIndex < images.length) {
+                showImage();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('game').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+
+            const correctAnswers = userChoices.filter(c => c.correct).length;
+            const scorePercent = Math.round((correctAnswers / images.length) * 100);
+            document.getElementById('scorePercent').textContent = `${scorePercent}%`;
+
+            // Calcul du score de biais
+            const biasScore = calculateBiasScore();
+            document.getElementById('biasScore').textContent = biasScore;
+
+            // Interprétation du score
+            let interpretation = '';
+            let badgeClass = '';
+            if (scorePercent >= 90) {
+                interpretation = '<div class="score-badge score-excellent">🎯 Excellent ! Peu de stéréotypes détectés</div>';
+            } else if (scorePercent >= 70) {
+                interpretation = '<div class="score-badge score-good">👍 Bien ! Mais quelques biais subsistent</div>';
+            } else if (scorePercent >= 50) {
+                interpretation = '<div class="score-badge score-attention">⚠️ Attention ! Tes stéréotypes t\'ont trompé</div>';
+            } else {
+                interpretation = '<div class="score-badge score-critique">🚨 Esprit critique nécessaire ! Biais importants</div>';
+            }
+            document.getElementById('scoreInterpretation').innerHTML = interpretation;
+
+            // Affichage de la grille de résultats
+            const grid = document.getElementById('resultsGrid');
+            grid.innerHTML = '';
+            userChoices.forEach((choice, index) => {
+                const card = document.createElement('div');
+                card.className = `result-card ${choice.correct ? 'result-correct' : 'result-incorrect'}`;
+                card.innerHTML = `
+                    <img src="${choice.image.src}" alt="Photo ${index + 1}">
+                    <div class="result-label">
+                        ${choice.correct ? '✓ Correct' : '✗ Erreur'}
+                    </div>
+                    <div style="font-size: 0.8em; margin-top: 5px;">
+                        ${choice.image.isDoctor ? 'Médecin' : 'Pas médecin'}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function calculateBiasScore() {
+            let biasPoints = 0;
+
+            // Biais 1: Associer blouse = médecin automatiquement
+            const blouseChoices = userChoices.filter(c => c.image.attire === 'blouse' && c.userSaid === true);
+            const blouseErrors = blouseChoices.filter(c => !c.correct).length;
+            biasPoints += blouseErrors * 2;
+
+            // Biais 2: Écarter les femmes
+            const womenDoctors = userChoices.filter(c => c.image.gender === 'femme' && c.image.isDoctor);
+            const womenMissed = womenDoctors.filter(c => !c.userSaid).length;
+            biasPoints += womenMissed * 3;
+
+            // Biais 3: Écarter les minorités
+            const minorityDoctors = userChoices.filter(c => 
+                (c.image.ethnicity === 'afro' || c.image.ethnicity === 'voilée') && c.image.isDoctor
+            );
+            const minorityMissed = minorityDoctors.filter(c => !c.userSaid).length;
+            biasPoints += minorityMissed * 3;
+
+            // Biais 4: Favoriser homme blanc en blouse
+            const whiteManBlouse = userChoices.filter(c => 
+                c.image.gender === 'homme' && 
+                c.image.ethnicity === 'blanc' && 
+                c.image.attire === 'blouse' &&
+                c.userSaid === true
+            );
+            biasPoints += whiteManBlouse.length;
+
+            return biasPoints;
+        }
+
+        function showBiasAnalysis() {
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('biasAnalysis').classList.remove('hidden');
+
+            let biasHTML = '';
+
+            // Analyse spécifique selon les erreurs
+            const womenDoctors = userChoices.filter(c => c.image.gender === 'femme' && c.image.isDoctor);
+            const womenMissed = womenDoctors.filter(c => !c.userSaid).length;
+
+            const minorityDoctors = userChoices.filter(c => 
+                (c.image.ethnicity === 'afro' || c.image.ethnicity === 'voilée') && c.image.isDoctor
+            );
+            const minorityMissed = minorityDoctors.filter(c => !c.userSaid).length;
+
+            const blouseNonDoctors = userChoices.filter(c => 
+                c.image.attire === 'blouse' && !c.image.isDoctor && c.userSaid
+            );
+
+            const villeDoctor = userChoices.filter(c => 
+                c.image.attire === 'ville' && c.image.isDoctor && !c.userSaid
+            );
+
+            if (womenMissed > 0) {
+                biasHTML += `
+                    <div class="bias-analysis">
+                        <h3>⚠️ Biais de genre détecté</h3>
+                        <p>Tu as manqué <strong>${womenMissed}</strong> femme(s) médecin(s).</p>
+                        <p>Pourquoi ? Peut-être parce que dans les séries TV et les médias, les médecins sont souvent représentés comme des hommes. Ton cerveau a appris ce raccourci.</p>
+                    </div>
+                `;
+            }
+
+            if (minorityMissed > 0) {
+                biasHTML += `
+                    <div class="bias-analysis">
+                        <h3>⚠️ Biais ethnique détecté</h3>
+                        <p>Tu as manqué <strong>${minorityMissed}</strong> médecin(s) issu(s) de minorités.</p>
+                        <p>Les représentations dominantes dans notre société associent souvent "autorité médicale" à "personne blanche". C'est un biais systémique.</p>
+                    </div>
+                `;
+            }
+
+            if (blouseNonDoctors.length > 0) {
+                biasHTML += `
+                    <div class="bias-analysis">
+                        <h3>⚠️ Biais de l'apparence</h3>
+                        <p>Tu as identifié <strong>${blouseNonDoctors.length}</strong> personne(s) en blouse comme médecin alors qu'elles ne l'étaient pas.</p>
+                        <p>La blouse ne fait pas le médecin ! Infirmiers, techniciens de labo, pharmaciens... beaucoup de métiers portent une blouse blanche.</p>
+                    </div>
+                `;
+            }
+
+            if (villeDoctor.length > 0) {
+                biasHTML += `
+                    <div class="bias-analysis">
+                        <h3>⚠️ Stéréotype du médecin</h3>
+                        <p>Tu as écarté <strong>${villeDoctor.length}</strong> médecin(s) en tenue de ville.</p>
+                        <p>Les médecins ne sont pas toujours à l'hôpital ! Beaucoup travaillent en cabinet, font de la recherche, ou exercent dans des contextes variés.</p>
+                    </div>
+                `;
+            }
+
+            if (biasHTML === '') {
+                biasHTML = `
+                    <div class="bias-analysis" style="border-color: #10b981; background: #d1fae5;">
+                        <h3 style="color: #065f46;">✓ Bravo !</h3>
+                        <p style="color: #065f46;">Tu as fait très peu d'erreurs basées sur des stéréotypes. Ton esprit critique est bien aiguisé !</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('biasContent').innerHTML = biasHTML;
+        }
+
+        function showAIPrediction() {
+            document.getElementById('biasAnalysis').classList.add('hidden');
+            document.getElementById('aiPrediction').classList.remove('hidden');
+
+            // Génération de la règle d'IA basée sur les choix
+            let aiRule = "SI (";
+            let rules = [];
+
+            // Analyser les patterns dans les choix corrects du joueur
+            const yesChoices = userChoices.filter(c => c.userSaid === true);
+            
+            const hommeRatio = yesChoices.filter(c => c.image.gender === 'homme').length / yesChoices.length;
+            if (hommeRatio > 0.6) rules.push("genre = HOMME");
+
+            const blouseRatio = yesChoices.filter(c => c.image.attire === 'blouse').length / yesChoices.length;
+            if (blouseRatio > 0.6) rules.push("vêtement = BLOUSE");
+
+            const blancRatio = yesChoices.filter(c => c.image.ethnicity === 'blanc').length / yesChoices.length;
+            if (blancRatio > 0.5) rules.push("origine = BLANCHE");
+
+            if (rules.length === 0) {
+                rules.push("choix_aléatoires");
+            }
+
+            aiRule += rules.join(" ET ") + ") ALORS médecin = OUI";
+            document.getElementById('aiRule').textContent = aiRule;
+
+            // Conséquence
+            let consequence = "";
+            if (rules.includes("genre = HOMME") && rules.includes("origine = BLANCHE")) {
+                consequence = "Cette IA discriminerait massivement les femmes et les personnes racisées dans le recrutement médical. Des milliers de candidatures excellentes seraient rejetées automatiquement.";
+            } else if (rules.includes("vêtement = BLOUSE")) {
+                consequence = "Cette IA ne reconnaîtrait que les médecins hospitaliers et écarterait tous les médecins de ville, chercheurs, ou exerçant dans d'autres contextes.";
+            } else if (rules.includes("genre = HOMME")) {
+                consequence = "Cette IA reproduirait le sexisme historique de la médecine et bloquerait l'accès des femmes à la profession.";
+            } else {
+                consequence = "Tes choix étaient assez équilibrés, mais même de petits biais dans les données d'entraînement peuvent avoir des conséquences énormes à l'échelle de millions de décisions.";
+            }
+
+            document.getElementById('aiConsequence').textContent = consequence;
+        }
+
+        function showDiscussion() {
+            document.getElementById('aiPrediction').classList.add('hidden');
+            document.getElementById('discussion').classList.remove('hidden');
+        }
+
+        function restart() {
+            currentIndex = 0;
+            userChoices = [];
+            document.getElementById('discussion').classList.add('hidden');
+            document.getElementById('intro').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
