@@ -378,16 +378,20 @@
         <div id="aiPrediction" class="phase hidden">
             <div class="phase-indicator">Phase 4 : L'IA formée sur tes biais</div>
             <h2>🤖 Si une IA était entraînée sur TES réponses...</h2>
-            
+
+            <div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <p style="margin: 0;"><strong>💡 Comment ça marche ?</strong></p>
+                <p style="margin: 10px 0 0 0;">L'IA a observé tes choix et a appris un <strong>motif</strong> : tu as systématiquement choisi certains profils comme médecins et ignoré d'autres. Comme une IA ne fait qu'imiter ce qu'elle voit dans ses données d'entraînement, elle a transformé <strong>tes biais inconscients</strong> en règle automatique.</p>
+            </div>
+
             <div class="ai-prediction">
                 <h3>Elle créerait cette règle :</h3>
                 <div class="ai-rule" id="aiRule"></div>
                 <p style="margin-top: 15px;"><strong>Conséquence :</strong> <span id="aiConsequence"></span></p>
             </div>
-            
+
             <button class="btn-next" onclick="showDiscussion()">Discutons-en</button>
         </div>
-
         <!-- Phase 6: Questions de discussion -->
         <div id="discussion" class="phase hidden">
             <div class="phase-indicator">Phase 5 : Discussion guidée</div>
@@ -406,11 +410,10 @@
 
             <div class="bias-analysis">
                 <h3>📚 Ce qu'il faut retenir</h3>
-                <p><strong>1. Les IA ne font qu'apprendre ce qu'on leur montre.</strong> Si tu lui montres uniquement des hommes blancs en blouse comme médecins, elle reproduira ce biais.</p>
-                <p><strong>2. Nos stéréotypes sont inconscients.</strong> Tu ne le fais pas exprès, mais ton cerveau utilise des raccourcis basés sur ce qu'il voit le plus souvent dans les médias, les séries, etc.</p>
-                <p><strong>3. Les conséquences sont réelles.</strong> Des IA biaisées sont utilisées pour recruter, diagnostiquer, accorder des prêts... et discriminent des millions de personnes.</p>
-            </div>
-            
+                <p><strong>1. Tes biais deviennent les biais de l'IA.</strong> L'IA apprend en observant des exemples. Si ces exemples reflètent nos stéréotypes (comme associer "médecin" à "homme blanc"), l'IA les reproduira automatiquement. <em>Tes choix d'aujourd'hui = les discriminations automatiques de demain.</em></p>
+                <p><strong>2. Nos biais personnels sont souvent inconscients.</strong> Tu ne choisis pas volontairement de discriminer, mais ton cerveau utilise des raccourcis basés sur ce que tu vois dans les médias, les séries, ton entourage. Ces stéréotypes inconscients se transmettent ensuite aux IA qu'on entraîne.</p>
+                <p><strong>3. Le cercle vicieux : biais humains → données biaisées → IA biaisée.</strong> Des IA biaisées sont déjà utilisées pour recruter, diagnostiquer, accorder des prêts... Elles discriminent des millions de personnes en reproduisant NOS propres préjugés à grande échelle.</p>
+            </div>            
             <button class="btn-next" onclick="restart()">Recommencer le jeu</button>
             <a href="https://borzeux.my.canva.site/intro-ia/les-biais-de-lia" class="btn-next" style="display: inline-block; text-decoration: none; text-align: center; margin-top: 15px;">Retour à la formation</a>
         </div>
