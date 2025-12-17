@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qui est médecin ? - Détection des biais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* === RETROFUTURISME VARIABLES === */
+        :root {
+            --retro-teal: #127676;
+            --retro-orange: #E4632E;
+            --retro-jaune: #E3A535;
+            --retro-ink: #0D1617;
+            --retro-paper: #F2EFE6;
+            
+            /* États sémantiques */
+            --retro-state-success: var(--retro-teal);
+            --retro-state-error: var(--retro-orange);
+            --retro-state-warning: var(--retro-jaune);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,7 +27,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: url('fond.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
@@ -30,44 +45,143 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(13, 22, 23, 0.5);
             z-index: 0;
+        }
+
+        /* === CONTAINER PRINCIPAL AVEC CADRE ORANGE === */
+        .container-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 940px;
+            width: 100%;
+            padding: 12px;
+            background: var(--retro-orange);
+            clip-path: polygon(
+                20px 0, calc(100% - 20px) 0, 100% 20px,
+                100% calc(100% - 20px), calc(100% - 20px) 100%,
+                20px 100%, 0 calc(100% - 20px), 0 20px
+            );
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        /* Coins circuit imprimé sur le cadre orange */
+        .container-wrapper::before,
+        .container-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--retro-teal);
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .container-wrapper::before { top: 18px; left: 18px; }
+        .container-wrapper::after { top: 18px; right: 18px; }
+
+        .corner-bottom {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--retro-teal);
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .corner-bottom-left { bottom: 18px; left: 18px; }
+        .corner-bottom-right { bottom: 18px; right: 18px; }
+
+        /* Lignes décoratives sur le cadre */
+        .frame-line {
+            position: absolute;
+            background: var(--retro-ink);
+            opacity: 0.3;
+        }
+        .frame-line-top {
+            top: 24px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+        }
+        .frame-line-bottom {
+            bottom: 24px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+        }
+        .frame-line-left {
+            left: 24px;
+            top: 50px;
+            bottom: 50px;
+            width: 2px;
+        }
+        .frame-line-right {
+            right: 24px;
+            top: 50px;
+            bottom: 50px;
+            width: 2px;
         }
 
         .container {
             position: relative;
-            z-index: 1;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 900px;
+            background: var(--retro-paper);
             width: 100%;
             padding: 40px;
             text-align: center;
+            border: 4px solid var(--retro-teal);
+            clip-path: polygon(
+                14px 0, calc(100% - 14px) 0, 100% 14px,
+                100% calc(100% - 14px), calc(100% - 14px) 100%,
+                14px 100%, 0 calc(100% - 14px), 0 14px
+            );
         }
 
+        /* === TYPOGRAPHIE === */
         h1 {
-            color: #667eea;
+            font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+            color: var(--retro-teal);
             margin-bottom: 10px;
-            font-size: 2.5em;
+            font-size: 3em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+            color: var(--retro-teal);
+            font-size: 2em;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: var(--retro-ink);
         }
 
         .subtitle {
-            color: #666;
+            color: var(--retro-ink);
             margin-bottom: 30px;
             font-size: 1.1em;
+            opacity: 0.8;
         }
 
+        /* === INDICATEUR DE PHASE === */
         .phase-indicator {
-            background: #f0f0f0;
-            padding: 10px 20px;
-            border-radius: 20px;
+            background: var(--retro-teal);
+            color: var(--retro-paper);
+            padding: 12px 28px;
             display: inline-block;
             margin-bottom: 30px;
-            font-weight: bold;
-            color: #667eea;
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-size: 1.1em;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);
         }
 
+        /* === IMAGE === */
         .image-container {
             margin: 30px auto;
             max-width: 350px;
@@ -77,16 +191,26 @@
             width: 100%;
             height: 450px;
             object-fit: cover;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 4px solid var(--retro-teal);
+            box-shadow: 
+                0 0 0 2px var(--retro-orange),
+                0 10px 30px rgba(0,0,0,0.3);
+            clip-path: polygon(
+                12px 0, calc(100% - 12px) 0, 100% 12px,
+                100% calc(100% - 12px), calc(100% - 12px) 100%,
+                12px 100%, 0 calc(100% - 12px), 0 12px
+            );
         }
 
         .counter {
-            font-size: 1.2em;
-            color: #666;
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-size: 1.4em;
+            color: var(--retro-teal);
             margin: 20px 0;
+            letter-spacing: 0.1em;
         }
 
+        /* === BOUTONS PILL RETROFUTURISTES === */
         .buttons {
             display: flex;
             gap: 20px;
@@ -95,48 +219,67 @@
             flex-wrap: wrap;
         }
 
-        button, .btn-next {
-            padding: 15px 40px;
-            font-size: 1.2em;
-            border: none;
+        .retro-btn-pill {
+            display: inline-flex;
+            align-items: stretch;
+            border: 3px solid var(--retro-teal);
             border-radius: 50px;
+            overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .retro-btn-pill:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .retro-btn-pill-text {
+            background: var(--retro-jaune);
+            color: var(--retro-ink);
+            padding: 14px 28px;
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-size: 1.2em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
+            display: flex;
+            align-items: center;
         }
 
-        .btn-medecin {
-            background: #10b981;
-            color: white;
+        .retro-btn-pill-icon {
+            background: var(--retro-orange);
+            color: var(--retro-paper);
+            width: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
         }
 
-        .btn-medecin:hover {
-            background: #059669;
-            transform: scale(1.05);
+        /* Boutons de choix spécifiques */
+        .btn-medecin .retro-btn-pill-text {
+            background: var(--retro-teal);
+            color: var(--retro-paper);
         }
 
-        .btn-pas-medecin {
-            background: #ef4444;
-            color: white;
+        .btn-medecin .retro-btn-pill-icon {
+            background: var(--retro-jaune);
+            color: var(--retro-ink);
         }
 
-        .btn-pas-medecin:hover {
-            background: #dc2626;
-            transform: scale(1.05);
+        .btn-pas-medecin .retro-btn-pill-text {
+            background: var(--retro-orange);
+            color: var(--retro-paper);
         }
 
-        .btn-next {
-            background: #667eea;
-            color: white;
-            margin-top: 20px;
+        .btn-pas-medecin .retro-btn-pill-icon {
+            background: var(--retro-ink);
+            color: var(--retro-paper);
         }
 
-        .btn-next:hover {
-            background: #5568d3;
-            transform: scale(1.05);
-        }
-
+        /* === GRILLE DE RÉSULTATS === */
         .results-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -145,34 +288,44 @@
         }
 
         .result-card {
-            border-radius: 10px;
             padding: 10px;
             position: relative;
+            clip-path: polygon(
+                8px 0, calc(100% - 8px) 0, 100% 8px,
+                100% calc(100% - 8px), calc(100% - 8px) 100%,
+                8px 100%, 0 calc(100% - 8px), 0 8px
+            );
         }
 
         .result-card img {
             width: 100%;
             height: 180px;
             object-fit: cover;
-            border-radius: 8px;
             margin-bottom: 8px;
+            clip-path: polygon(
+                6px 0, calc(100% - 6px) 0, 100% 6px,
+                100% calc(100% - 6px), calc(100% - 6px) 100%,
+                6px 100%, 0 calc(100% - 6px), 0 6px
+            );
         }
 
         .result-correct {
-            background: #d1fae5;
-            border: 3px solid #10b981;
+            background: rgba(18, 118, 118, 0.15);
+            border: 3px solid var(--retro-teal);
         }
 
         .result-incorrect {
-            background: #fee2e2;
-            border: 3px solid #ef4444;
+            background: rgba(228, 99, 46, 0.15);
+            border: 3px solid var(--retro-orange);
         }
 
         .result-label {
-            font-size: 0.9em;
-            font-weight: bold;
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-size: 1em;
+            letter-spacing: 0.05em;
         }
 
+        /* === STATISTIQUES === */
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -181,89 +334,125 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: var(--retro-teal);
+            color: var(--retro-paper);
+            padding: 25px 20px;
+            border: 3px solid var(--retro-ink);
+            box-shadow: 0 0 0 2px var(--retro-orange);
+            clip-path: polygon(
+                12px 0, calc(100% - 12px) 0, 100% 12px,
+                100% calc(100% - 12px), calc(100% - 12px) 100%,
+                12px 100%, 0 calc(100% - 12px), 0 12px
+            );
         }
 
         .stat-number {
-            font-size: 3em;
-            font-weight: bold;
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-size: 3.5em;
             margin: 10px 0;
+            color: var(--retro-jaune);
+            text-shadow: 2px 2px 0 var(--retro-ink);
         }
 
         .stat-label {
-            font-size: 1em;
+            font-size: 0.95em;
             opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
         }
 
+        /* === ZONES D'ANALYSE === */
         .bias-analysis {
-            background: #fef3c7;
-            border-left: 5px solid #f59e0b;
-            padding: 20px;
-            margin: 30px 0;
+            background: rgba(227, 165, 53, 0.15);
+            border-left: 5px solid var(--retro-jaune);
+            padding: 25px;
+            margin: 25px 0;
             text-align: left;
-            border-radius: 10px;
+            clip-path: polygon(
+                0 0, calc(100% - 12px) 0, 100% 12px,
+                100% 100%, 0 100%
+            );
         }
 
         .bias-analysis h3 {
-            color: #92400e;
+            color: var(--retro-ink);
             margin-bottom: 15px;
+            font-size: 1.1em;
         }
 
         .bias-analysis p {
-            color: #78350f;
-            line-height: 1.6;
-            margin-bottom: 10px;
+            color: var(--retro-ink);
+            line-height: 1.7;
+            margin-bottom: 12px;
         }
 
         .ai-prediction {
-            background: #dbeafe;
-            border-left: 5px solid #3b82f6;
-            padding: 20px;
-            margin: 30px 0;
+            background: rgba(18, 118, 118, 0.1);
+            border-left: 5px solid var(--retro-teal);
+            padding: 25px;
+            margin: 25px 0;
             text-align: left;
-            border-radius: 10px;
+            clip-path: polygon(
+                0 0, calc(100% - 12px) 0, 100% 12px,
+                100% 100%, 0 100%
+            );
         }
 
         .ai-prediction h3 {
-            color: #1e40af;
+            color: var(--retro-teal);
             margin-bottom: 15px;
         }
 
         .ai-rule {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
+            background: var(--retro-ink);
+            padding: 18px;
             font-family: 'Courier New', monospace;
-            color: #1e40af;
-            margin: 10px 0;
+            color: var(--retro-jaune);
+            margin: 15px 0;
+            border: 2px solid var(--retro-teal);
+            clip-path: polygon(
+                8px 0, calc(100% - 8px) 0, 100% 8px,
+                100% calc(100% - 8px), calc(100% - 8px) 100%,
+                8px 100%, 0 calc(100% - 8px), 0 8px
+            );
         }
 
         .discussion-questions {
-            background: #f3e8ff;
-            border-left: 5px solid #a855f7;
-            padding: 20px;
-            margin: 30px 0;
+            background: rgba(228, 99, 46, 0.1);
+            border-left: 5px solid var(--retro-orange);
+            padding: 25px;
+            margin: 25px 0;
             text-align: left;
-            border-radius: 10px;
+            clip-path: polygon(
+                0 0, calc(100% - 12px) 0, 100% 12px,
+                100% 100%, 0 100%
+            );
         }
 
         .discussion-questions h3 {
-            color: #6b21a8;
+            color: var(--retro-orange);
             margin-bottom: 15px;
         }
 
         .discussion-questions ul {
-            list-style-position: inside;
-            color: #7c3aed;
+            list-style: none;
+            color: var(--retro-ink);
         }
 
         .discussion-questions li {
-            margin: 10px 0;
+            margin: 12px 0;
             line-height: 1.6;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .discussion-questions li::before {
+            content: '»';
+            position: absolute;
+            left: 0;
+            color: var(--retro-orange);
+            font-weight: bold;
+            font-size: 1.2em;
         }
 
         .hidden {
@@ -273,9 +462,13 @@
         .intro-text {
             font-size: 1.1em;
             line-height: 1.8;
-            color: #444;
+            color: var(--retro-ink);
             margin: 20px 0;
             text-align: left;
+        }
+
+        .intro-text p {
+            margin-bottom: 10px;
         }
 
         @keyframes fadeIn {
@@ -287,62 +480,132 @@
             animation: fadeIn 0.5s ease;
         }
 
+        /* === BADGES DE SCORE === */
         .score-badge {
             display: inline-block;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin: 10px;
+            padding: 12px 24px;
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-size: 1.1em;
+            letter-spacing: 0.1em;
+            margin: 15px;
+            clip-path: polygon(
+                10px 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0 50%
+            );
         }
 
-        .score-excellent { background: #10b981; color: white; }
-        .score-good { background: #3b82f6; color: white; }
-        .score-attention { background: #f59e0b; color: white; }
-        .score-critique { background: #ef4444; color: white; }
+        .score-excellent { 
+            background: var(--retro-teal); 
+            color: var(--retro-paper); 
+        }
+        .score-good { 
+            background: var(--retro-teal); 
+            color: var(--retro-paper);
+            opacity: 0.85;
+        }
+        .score-attention { 
+            background: var(--retro-jaune); 
+            color: var(--retro-ink); 
+        }
+        .score-critique { 
+            background: var(--retro-orange); 
+            color: var(--retro-paper); 
+        }
 
+        /* === INFO BOX === */
+        .info-box {
+            background: var(--retro-paper);
+            border: 2px solid var(--retro-teal);
+            padding: 18px;
+            margin-bottom: 20px;
+            text-align: left;
+            clip-path: polygon(
+                8px 0, calc(100% - 8px) 0, 100% 8px,
+                100% calc(100% - 8px), calc(100% - 8px) 100%,
+                8px 100%, 0 calc(100% - 8px), 0 8px
+            );
+        }
+
+        .info-box p {
+            margin: 8px 0;
+            color: var(--retro-ink);
+        }
+
+        /* === RESPONSIVE === */
         @media (max-width: 600px) {
-            .container { padding: 20px; }
-            h1 { font-size: 1.8em; }
-            button { padding: 12px 25px; font-size: 1em; }
+            .container-wrapper { padding: 8px; }
+            .container { padding: 25px 20px; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            .retro-btn-pill-text { padding: 12px 20px; font-size: 1em; }
+            .retro-btn-pill-icon { width: 48px; }
             .image-container img { height: 350px; }
+            .stat-number { font-size: 2.8em; }
+            .container-wrapper::before,
+            .container-wrapper::after,
+            .corner-bottom { width: 8px; height: 8px; }
+            .container-wrapper::before { top: 12px; left: 12px; }
+            .container-wrapper::after { top: 12px; right: 12px; }
+            .corner-bottom-left { bottom: 12px; left: 12px; }
+            .corner-bottom-right { bottom: 12px; right: 12px; }
+            .frame-line { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Container avec cadre orange retrofuturiste -->
+    <div class="container-wrapper">
+        <!-- Coins circuit imprimé bas -->
+        <div class="corner-bottom corner-bottom-left"></div>
+        <div class="corner-bottom corner-bottom-right"></div>
+        <!-- Lignes décoratives -->
+        <div class="frame-line frame-line-top"></div>
+        <div class="frame-line frame-line-bottom"></div>
+        <div class="frame-line frame-line-left"></div>
+        <div class="frame-line frame-line-right"></div>
+        
+        <div class="container">
         <!-- Phase 1: Introduction -->
         <div id="intro" class="phase fade-in">
-            <h1>🩺 Qui est médecin ?</h1>
+            <h1>🩺 QUI EST MÉDECIN ?</h1>
             <p class="subtitle">Un jeu pour révéler tes biais (et ceux de l'IA)</p>
             
             <div class="intro-text">
-                <p><strong>📋 Les règles :</strong></p>
+                <p><strong>📋 LES RÈGLES :</strong></p>
                 <p>Tu vas voir 14 photos de personnes. Certaines sont médecins, d'autres non.</p>
                 <p>Pour chaque photo, tu dois décider rapidement : <strong>MÉDECIN</strong> ou <strong>PAS MÉDECIN</strong>.</p>
             </div>
             
-            <button class="btn-next" onclick="startGame()">Commencer le jeu</button>
+            <button class="retro-btn-pill" onclick="startGame()">
+                <span class="retro-btn-pill-text">Commencer le jeu</span>
+                <span class="retro-btn-pill-icon">»</span>
+            </button>
         </div>
 
         <!-- Phase 2: Jeu -->
         <div id="game" class="phase hidden">
-            <div class="phase-indicator">Phase 1 : Tes choix</div>
-            <div class="counter" id="counter">Photo 1/14</div>
+            <div class="phase-indicator">PHASE 1 : TES CHOIX</div>
+            <div class="counter" id="counter">PHOTO 1/14</div>
             
             <div class="image-container">
                 <img id="currentImage" src="" alt="Personne à identifier">
             </div>
             
             <div class="buttons">
-                <button class="btn-medecin" onclick="makeChoice(true)">✓ MÉDECIN</button>
-                <button class="btn-pas-medecin" onclick="makeChoice(false)">✗ PAS MÉDECIN</button>
+                <button class="retro-btn-pill btn-medecin" onclick="makeChoice(true)">
+                    <span class="retro-btn-pill-text">✓ MÉDECIN</span>
+                    <span class="retro-btn-pill-icon">+</span>
+                </button>
+                <button class="retro-btn-pill btn-pas-medecin" onclick="makeChoice(false)">
+                    <span class="retro-btn-pill-text">✗ PAS MÉDECIN</span>
+                    <span class="retro-btn-pill-icon">−</span>
+                </button>
             </div>
         </div>
 
         <!-- Phase 3: Résultats -->
         <div id="results" class="phase hidden">
-            <div class="phase-indicator">Phase 2 : Le reveal</div>
-            <h2>Tes résultats</h2>
+            <div class="phase-indicator">PHASE 2 : LE REVEAL</div>
+            <h2>TES RÉSULTATS</h2>
             
             <div class="stats">
                 <div class="stat-card">
@@ -361,27 +624,33 @@
             
             <div class="results-grid" id="resultsGrid"></div>
             
-            <button class="btn-next" onclick="showBiasAnalysis()">Analyser mes biais</button>
+            <button class="retro-btn-pill" onclick="showBiasAnalysis()">
+                <span class="retro-btn-pill-text">Analyser mes biais</span>
+                <span class="retro-btn-pill-icon">»</span>
+            </button>
         </div>
 
         <!-- Phase 4: Analyse des biais -->
         <div id="biasAnalysis" class="phase hidden">
-            <div class="phase-indicator">Phase 3 : Analyse de tes biais</div>
-            <h2>🔍 Ce que tes choix révèlent</h2>
+            <div class="phase-indicator">PHASE 3 : ANALYSE DE TES BIAIS</div>
+            <h2>🔍 CE QUE TES CHOIX RÉVÈLENT</h2>
             
             <div id="biasContent"></div>
             
-            <button class="btn-next" onclick="showAIPrediction()">Et si une IA apprenait de mes choix ?</button>
+            <button class="retro-btn-pill" onclick="showAIPrediction()">
+                <span class="retro-btn-pill-text">Et si une IA apprenait de mes choix ?</span>
+                <span class="retro-btn-pill-icon">»</span>
+            </button>
         </div>
 
         <!-- Phase 5: Prédiction IA -->
         <div id="aiPrediction" class="phase hidden">
-            <div class="phase-indicator">Phase 4 : L'IA formée sur tes biais</div>
-            <h2>🤖 Si une IA était entraînée sur TES réponses...</h2>
+            <div class="phase-indicator">PHASE 4 : L'IA FORMÉE SUR TES BIAIS</div>
+            <h2>🤖 SI UNE IA ÉTAIT ENTRAÎNÉE SUR TES RÉPONSES...</h2>
 
-            <div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <p style="margin: 0;"><strong>💡 Comment ça marche ?</strong></p>
-                <p style="margin: 10px 0 0 0;">L'IA a observé tes choix et a appris un <strong>motif</strong> : tu as systématiquement choisi certains profils comme médecins et ignoré d'autres. Comme une IA ne fait qu'imiter ce qu'elle voit dans ses données d'entraînement, elle a transformé <strong>tes biais inconscients</strong> en règle automatique.</p>
+            <div class="info-box">
+                <p><strong>💡 COMMENT ÇA MARCHE ?</strong></p>
+                <p>L'IA a observé tes choix et a appris un <strong>motif</strong> : tu as systématiquement choisi certains profils comme médecins et ignoré d'autres. Comme une IA ne fait qu'imiter ce qu'elle voit dans ses données d'entraînement, elle a transformé <strong>tes biais inconscients</strong> en règle automatique.</p>
             </div>
 
             <div class="ai-prediction">
@@ -390,12 +659,16 @@
                 <p style="margin-top: 15px;"><strong>Conséquence :</strong> <span id="aiConsequence"></span></p>
             </div>
 
-            <button class="btn-next" onclick="showDiscussion()">Discutons-en</button>
+            <button class="retro-btn-pill" onclick="showDiscussion()">
+                <span class="retro-btn-pill-text">Discutons-en</span>
+                <span class="retro-btn-pill-icon">»</span>
+            </button>
         </div>
+
         <!-- Phase 6: Questions de discussion -->
         <div id="discussion" class="phase hidden">
-            <div class="phase-indicator">Phase 5 : Discussion guidée</div>
-            <h2>💭 Questions pour réfléchir</h2>
+            <div class="phase-indicator">PHASE 5 : DISCUSSION GUIDÉE</div>
+            <h2>💭 QUESTIONS POUR RÉFLÉCHIR</h2>
             
             <div class="discussion-questions">
                 <h3>À discuter en groupe :</h3>
@@ -409,13 +682,23 @@
             </div>
 
             <div class="bias-analysis">
-                <h3>📚 Ce qu'il faut retenir</h3>
+                <h3>📚 CE QU'IL FAUT RETENIR</h3>
                 <p><strong>1. Tes biais deviennent les biais de l'IA.</strong> L'IA apprend en observant des exemples. Si ces exemples reflètent nos stéréotypes (comme associer "médecin" à "homme blanc"), l'IA les reproduira automatiquement. <em>Tes choix d'aujourd'hui = les discriminations automatiques de demain.</em></p>
                 <p><strong>2. Nos biais personnels sont souvent inconscients.</strong> Tu ne choisis pas volontairement de discriminer, mais ton cerveau utilise des raccourcis basés sur ce que tu vois dans les médias, les séries, ton entourage. Ces stéréotypes inconscients se transmettent ensuite aux IA qu'on entraîne.</p>
                 <p><strong>3. Le cercle vicieux : biais humains → données biaisées → IA biaisée.</strong> Des IA biaisées sont déjà utilisées pour recruter, diagnostiquer, accorder des prêts... Elles discriminent des millions de personnes en reproduisant NOS propres préjugés à grande échelle.</p>
-            </div>            
-            <button class="btn-next" onclick="restart()">Recommencer le jeu</button>
-            <a href="https://borzeux.my.canva.site/intro-ia/les-biais-de-lia" class="btn-next" style="display: inline-block; text-decoration: none; text-align: center; margin-top: 15px;">Retour à la formation</a>
+            </div>
+            
+            <div class="buttons" style="flex-direction: column; align-items: center;">
+                <button class="retro-btn-pill" onclick="restart()">
+                    <span class="retro-btn-pill-text">Recommencer le jeu</span>
+                    <span class="retro-btn-pill-icon">↻</span>
+                </button>
+                <a href="https://borzeux.my.canva.site/intro-ia/les-biais-de-lia" class="retro-btn-pill" style="margin-top: 15px;">
+                    <span class="retro-btn-pill-text">Retour à la formation</span>
+                    <span class="retro-btn-pill-icon">«</span>
+                </a>
+            </div>
+        </div>
         </div>
     </div>
 
@@ -460,7 +743,7 @@
         function showImage() {
             const img = images[currentIndex];
             document.getElementById('currentImage').src = img.src;
-            document.getElementById('counter').textContent = `Photo ${currentIndex + 1}/${images.length}`;
+            document.getElementById('counter').textContent = `PHOTO ${currentIndex + 1}/${images.length}`;
         }
 
         function makeChoice(choice) {
@@ -495,13 +778,13 @@
 
             let interpretation = '';
             if (scorePercent >= 90) {
-                interpretation = '<div class="score-badge score-excellent">🎯 Excellent ! Peu de stéréotypes détectés</div>';
+                interpretation = '<div class="score-badge score-excellent">🎯 EXCELLENT ! PEU DE STÉRÉOTYPES DÉTECTÉS</div>';
             } else if (scorePercent >= 70) {
-                interpretation = '<div class="score-badge score-good">👍 Bien ! Mais quelques biais subsistent</div>';
+                interpretation = '<div class="score-badge score-good">👍 BIEN ! MAIS QUELQUES BIAIS SUBSISTENT</div>';
             } else if (scorePercent >= 50) {
-                interpretation = '<div class="score-badge score-attention">⚠️ Attention ! Tes stéréotypes t\'ont trompé</div>';
+                interpretation = '<div class="score-badge score-attention">⚠️ ATTENTION ! TES STÉRÉOTYPES T\'ONT TROMPÉ</div>';
             } else {
-                interpretation = '<div class="score-badge score-critique">🚨 Esprit critique nécessaire ! Biais importants</div>';
+                interpretation = '<div class="score-badge score-critique">🚨 ESPRIT CRITIQUE NÉCESSAIRE ! BIAIS IMPORTANTS</div>';
             }
             document.getElementById('scoreInterpretation').innerHTML = interpretation;
 
@@ -513,9 +796,9 @@
                 card.innerHTML = `
                     <img src="${choice.image.src}" alt="Photo ${index + 1}">
                     <div class="result-label">
-                        ${choice.correct ? '✓ Correct' : '✗ Erreur'}
+                        ${choice.correct ? '✓ CORRECT' : '✗ ERREUR'}
                     </div>
-                    <div style="font-size: 0.8em; margin-top: 5px;">
+                    <div style="font-size: 0.85em; margin-top: 5px; opacity: 0.8;">
                         ${choice.image.isDoctor ? 'Médecin' : 'Pas médecin'}
                     </div>
                 `;
@@ -580,7 +863,7 @@
             if (womenMissed > 0) {
                 biasHTML += `
                     <div class="bias-analysis">
-                        <h3>⚠️ Biais de genre détecté</h3>
+                        <h3>⚠️ BIAIS DE GENRE DÉTECTÉ</h3>
                         <p>Tu as manqué <strong>${womenMissed}</strong> femme(s) médecin(s).</p>
                         <p>Pourquoi ? Peut-être parce que dans les séries TV et les médias, les médecins sont souvent représentés comme des hommes. Ton cerveau a appris ce raccourci.</p>
                     </div>
@@ -590,7 +873,7 @@
             if (minorityMissed > 0) {
                 biasHTML += `
                     <div class="bias-analysis">
-                        <h3>⚠️ Biais ethnique détecté</h3>
+                        <h3>⚠️ BIAIS ETHNIQUE DÉTECTÉ</h3>
                         <p>Tu as manqué <strong>${minorityMissed}</strong> médecin(s) issu(s) de minorités.</p>
                         <p>Les représentations dominantes dans notre société associent souvent "autorité médicale" à un certain profil. C'est un biais systémique.</p>
                     </div>
@@ -600,7 +883,7 @@
             if (blouseNonDoctors.length > 0) {
                 biasHTML += `
                     <div class="bias-analysis">
-                        <h3>⚠️ Biais de l'apparence</h3>
+                        <h3>⚠️ BIAIS DE L'APPARENCE</h3>
                         <p>Tu as identifié <strong>${blouseNonDoctors.length}</strong> personne(s) en blouse comme médecin alors qu'elles ne l'étaient pas.</p>
                         <p>La blouse ne fait pas le médecin ! Infirmiers, techniciens de labo, pharmaciens... beaucoup de métiers portent une blouse blanche.</p>
                     </div>
@@ -610,7 +893,7 @@
             if (villeDoctor.length > 0) {
                 biasHTML += `
                     <div class="bias-analysis">
-                        <h3>⚠️ Stéréotype du médecin</h3>
+                        <h3>⚠️ STÉRÉOTYPE DU MÉDECIN</h3>
                         <p>Tu as écarté <strong>${villeDoctor.length}</strong> médecin(s) en tenue de ville.</p>
                         <p>Les médecins ne sont pas toujours à l'hôpital ! Beaucoup travaillent en cabinet, font de la recherche, ou exercent dans des contextes variés.</p>
                     </div>
@@ -619,9 +902,9 @@
 
             if (biasHTML === '') {
                 biasHTML = `
-                    <div class="bias-analysis" style="border-color: #10b981; background: #d1fae5;">
-                        <h3 style="color: #065f46;">✓ Bravo !</h3>
-                        <p style="color: #065f46;">Tu as fait très peu d'erreurs basées sur des stéréotypes. Ton esprit critique est bien aiguisé !</p>
+                    <div class="ai-prediction">
+                        <h3 style="color: var(--retro-teal);">✓ BRAVO !</h3>
+                        <p>Tu as fait très peu d'erreurs basées sur des stéréotypes. Ton esprit critique est bien aiguisé !</p>
                     </div>
                 `;
             }
