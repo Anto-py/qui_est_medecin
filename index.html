@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qui est médecin ? - Détection des biais</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Qui est médecin ? - Détection des biais</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
         /* === RETROFUTURISME VARIABLES v2.0 === */
         :root {
             --retro-teal: #127676;
@@ -874,464 +875,412 @@
     </style>
 </head>
 <body>
-    <!-- Cadre Art Nouveau -->
-    <div class="page-frame">
-        <!-- Motifs floraux aux coins -->
-        <div class="corner-flourish top-left">
-            <svg viewBox="0 0 100 100">
-                <path d="M10,90 Q10,50 30,30 Q50,10 90,10 M20,80 Q20,45 40,25 M15,70 C25,55 35,45 55,35 Q70,25 80,15" 
-                      stroke="currentColor" fill="none" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="30" cy="30" r="4" fill="currentColor"/>
-                <circle cx="15" cy="50" r="3" fill="currentColor"/>
-                <circle cx="50" cy="15" r="3" fill="currentColor"/>
-            </svg>
-        </div>
-        <div class="corner-flourish top-right">
-            <svg viewBox="0 0 100 100">
-                <path d="M10,90 Q10,50 30,30 Q50,10 90,10 M20,80 Q20,45 40,25 M15,70 C25,55 35,45 55,35 Q70,25 80,15" 
-                      stroke="currentColor" fill="none" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="30" cy="30" r="4" fill="currentColor"/>
-                <circle cx="15" cy="50" r="3" fill="currentColor"/>
-                <circle cx="50" cy="15" r="3" fill="currentColor"/>
-            </svg>
-        </div>
-        <div class="corner-flourish bottom-left">
-            <svg viewBox="0 0 100 100">
-                <path d="M10,90 Q10,50 30,30 Q50,10 90,10 M20,80 Q20,45 40,25 M15,70 C25,55 35,45 55,35 Q70,25 80,15" 
-                      stroke="currentColor" fill="none" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="30" cy="30" r="4" fill="currentColor"/>
-                <circle cx="15" cy="50" r="3" fill="currentColor"/>
-                <circle cx="50" cy="15" r="3" fill="currentColor"/>
-            </svg>
-        </div>
-        <div class="corner-flourish bottom-right">
-            <svg viewBox="0 0 100 100">
-                <path d="M10,90 Q10,50 30,30 Q50,10 90,10 M20,80 Q20,45 40,25 M15,70 C25,55 35,45 55,35 Q70,25 80,15" 
-                      stroke="currentColor" fill="none" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="30" cy="30" r="4" fill="currentColor"/>
-                <circle cx="15" cy="50" r="3" fill="currentColor"/>
-                <circle cx="50" cy="15" r="3" fill="currentColor"/>
-            </svg>
-        </div>
-        
-        <div class="inner-frame"></div>
-        
-        <div class="container">
-            <!-- Phase 1: Introduction -->
-            <div id="intro" class="phase fade-in">
-                <h1>🩺 QUI EST MÉDECIN ?</h1>
-                <p class="subtitle">Un jeu pour révéler tes biais (et ceux de l'IA)</p>
-                
-                <div class="retro-separator">
-                    <span class="flourish">❧</span>
-                </div>
-                
-                <div class="intro-text">
-                    <p><strong>📋 LES RÈGLES :</strong></p>
-                    <p>Tu vas voir 14 photos de personnes. Certaines sont médecins, d'autres non.</p>
-                    <p>Pour chaque photo, tu dois décider rapidement : <strong>MÉDECIN</strong> ou <strong>PAS MÉDECIN</strong>.</p>
-                </div>
-                
-                <button class="retro-btn-pill" onclick="startGame()">
-                    <span class="retro-btn-pill-text">Commencer le jeu</span>
-                    <span class="retro-btn-pill-icon">»</span>
-                </button>
-            </div>
-
-            <!-- Phase 2: Jeu -->
-            <div id="game" class="phase hidden">
-                <div class="phase-indicator">PHASE 1 : TES CHOIX</div>
-                <div class="counter" id="counter">PHOTO 1/14</div>
-                
-                <div class="image-container">
-                    <img id="currentImage" src="" alt="Personne à identifier">
-                </div>
-                
-                <div class="buttons">
-                    <button class="retro-btn-pill btn-choice" onclick="makeChoice(true)">
-                        <span class="retro-btn-pill-text">✓ MÉDECIN</span>
-                        <span class="retro-btn-pill-icon">+</span>
-                    </button>
-                    <button class="retro-btn-pill btn-choice" onclick="makeChoice(false)">
-                        <span class="retro-btn-pill-text">✗ PAS MÉDECIN</span>
-                        <span class="retro-btn-pill-icon">−</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Phase 3: Résultats -->
-            <div id="results" class="phase hidden">
-                <div class="phase-indicator">PHASE 2 : LE REVEAL</div>
-                <h2>TES RÉSULTATS</h2>
-                
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-label">Score</div>
-                        <div class="stat-number" id="scorePercent">0%</div>
-                        <div class="stat-label">de bonnes réponses</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Biais détecté</div>
-                        <div class="stat-number" id="biasScore">0</div>
-                        <div class="stat-label">points de stéréotype</div>
-                    </div>
-                </div>
-
-                <div id="scoreInterpretation"></div>
-                
-                <div class="retro-separator">
-                    <span class="flourish">✿</span>
-                </div>
-                
-                <div class="results-grid" id="resultsGrid"></div>
-                
-                <button class="retro-btn-pill" onclick="showBiasAnalysis()">
-                    <span class="retro-btn-pill-text">Analyser mes biais</span>
-                    <span class="retro-btn-pill-icon">»</span>
-                </button>
-            </div>
-
-            <!-- Phase 4: Analyse des biais -->
-            <div id="biasAnalysis" class="phase hidden">
-                <div class="phase-indicator">PHASE 3 : ANALYSE DE TES BIAIS</div>
-                <h2>🔍 CE QUE TES CHOIX RÉVÈLENT</h2>
-                
-                <div id="biasContent"></div>
-                
-                <div class="retro-separator">
-                    <span class="flourish">⚘</span>
-                </div>
-                
-                <button class="retro-btn-pill" onclick="showAIPrediction()">
-                    <span class="retro-btn-pill-text">Et si une IA apprenait de mes choix ?</span>
-                    <span class="retro-btn-pill-icon">»</span>
-                </button>
-            </div>
-
-            <!-- Phase 5: Prédiction IA -->
-            <div id="aiPrediction" class="phase hidden">
-                <div class="phase-indicator">PHASE 4 : L'IA FORMÉE SUR TES BIAIS</div>
-                <h2>🤖 SI UNE IA ÉTAIT ENTRAÎNÉE SUR TES RÉPONSES...</h2>
-
-                <div class="info-box">
-                    <h3>💡 COMMENT ÇA MARCHE ?</h3>
-                    <p>L'IA a observé tes choix et a appris un <strong>motif</strong> : tu as systématiquement choisi certains profils comme médecins et ignoré d'autres.</p>
-                    <p>Comme une IA ne fait qu'imiter ce qu'elle voit dans ses données d'entraînement, elle a transformé <strong>tes biais inconscients</strong> en règle automatique.</p>
-                </div>
-
-                <div class="ai-prediction">
-                    <h3>ELLE CRÉERAIT CETTE RÈGLE :</h3>
-                    <div class="ai-rule" id="aiRule"></div>
-                    <p style="margin-top: 18px;"><strong>Conséquence :</strong> <span id="aiConsequence"></span></p>
-                </div>
-
-                <div class="retro-separator">
-                    <span class="flourish">❀</span>
-                </div>
-
-                <button class="retro-btn-pill" onclick="showDiscussion()">
-                    <span class="retro-btn-pill-text">Comprendre les biais IA</span>
-                    <span class="retro-btn-pill-icon">»</span>
-                </button>
-            </div>
-
-            <!-- Phase 6: Discussion enrichie -->
-            <div id="discussion" class="phase hidden">
-                <div class="phase-indicator">PHASE 5 : COMPRENDRE LES BIAIS DE L'IA</div>
-                <h2>🪞 L'IA EST UN MIROIR DÉFORMANT</h2>
-                
-                <!-- Mirror Box -->
-                <div class="mirror-box">
-                    <h3>L'IA NE CRÉE RIEN DE NOUVEAU</h3>
-                    <p>Quand tu demandes à une IA de créer une image, elle ne « réfléchit » pas. Elle <strong>reproduit les schémas</strong> qu'elle a vus le plus souvent dans ses données d'entraînement : des millions d'images récupérées sur Internet.</p>
-                </div>
-
-                <div class="info-box">
-                    <h3>🌐 INTERNET N'EST PAS NEUTRE</h3>
-                    <p>L'IA apprend sur des images qui viennent de publicités (stéréotypes de genre), de films/séries (rôles stéréotypés), de banques d'images (sur-représentation de personnes blanches, jeunes), et des réseaux sociaux (filtres de beauté, contenus occidentaux).</p>
-                </div>
-
-                <div class="retro-separator">
-                    <span class="flourish">✿</span>
-                </div>
-
-                <!-- Types de biais -->
-                <h2>📊 LES 5 TYPES DE BIAIS</h2>
-                
-                <div class="bias-types-grid">
-                    <div class="bias-type-card">
-                        <div class="icon">👤</div>
-                        <h4>Biais de genre</h4>
-                        <p>Association automatique d'un genre à un métier ou une activité.</p>
-                        <div class="example">« Infirmier » → femme • « PDG » → homme</div>
-                    </div>
-                    
-                    <div class="bias-type-card">
-                        <div class="icon">🌍</div>
-                        <h4>Biais culturel</h4>
-                        <p>Vision occidentale présentée comme la « norme » mondiale.</p>
-                        <div class="example">« Mariage » → robe blanche, église</div>
-                    </div>
-                    
-                    <div class="bias-type-card">
-                        <div class="icon">✨</div>
-                        <h4>Biais de beauté</h4>
-                        <p>Sur-représentation des standards de beauté dominants.</p>
-                        <div class="example">« Personne heureuse » → jeune, mince</div>
-                    </div>
-                    
-                    <div class="bias-type-card">
-                        <div class="icon">👔</div>
-                        <h4>Biais de pouvoir</h4>
-                        <p>Association entre autorité/leadership et certains profils.</p>
-                        <div class="example">« Chef d'équipe » → homme au centre</div>
-                    </div>
-                    
-                    <div class="bias-type-card">
-                        <div class="icon">🏆</div>
-                        <h4>Biais de réussite</h4>
-                        <p>Vision étroite du « succès » (argent, ville, costume).</p>
-                        <div class="example">« Réussite » → homme, costume, bureau</div>
-                    </div>
-                </div>
-
-                <div class="retro-separator">
-                    <span class="flourish">⚘</span>
-                </div>
-
-                <!-- Cercle vicieux -->
-                <div class="cycle-container">
-                    <h3>⚠️ LE CERCLE VICIEUX DES BIAIS</h3>
-                    <div class="cycle-steps">
-                        <div class="cycle-step">📷 Images stéréotypées sur Internet</div>
-                        <div class="cycle-arrow">→</div>
-                        <div class="cycle-step">🤖 L'IA apprend ces stéréotypes</div>
-                        <div class="cycle-arrow">→</div>
-                        <div class="cycle-step">🖼️ L'IA crée de nouvelles images biaisées</div>
-                        <div class="cycle-arrow">→</div>
-                        <div class="cycle-step">🌐 Ces images circulent sur Internet</div>
-                        <div class="cycle-arrow">→</div>
-                        <div class="cycle-step">👥 Les internautes sont influencés par les images d'internet</div>
-                        <div class="cycle-arrow">→</div>
-                        <div class="cycle-step">🔄 Et le cycle recommence...</div>
-                    </div>
-                    <div class="cycle-warning">
+<!-- Cadre Art Nouveau -->
+<div class="page-frame">
+<!-- Motifs floraux aux coins -->
+<div class="corner-flourish top-left">
+<svg viewbox="0 0 100 100">
+<path d="M10,90 Q10,50 30,30 Q50,10 90,10 M20,80 Q20,45 40,25 M15,70 C25,55 35,45 55,35 Q70,25 80,15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="30" cy="30" fill="currentColor" r="4"></circle>
+<circle cx="15" cy="50" fill="currentColor" r="3"></circle>
+<circle cx="50" cy="15" fill="currentColor" r="3"></circle>
+</svg>
+</div>
+<div class="corner-flourish top-right">
+<svg viewbox="0 0 100 100">
+<path d="M10,90 Q10,50 30,30 Q50,10 90,10 M20,80 Q20,45 40,25 M15,70 C25,55 35,45 55,35 Q70,25 80,15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="30" cy="30" fill="currentColor" r="4"></circle>
+<circle cx="15" cy="50" fill="currentColor" r="3"></circle>
+<circle cx="50" cy="15" fill="currentColor" r="3"></circle>
+</svg>
+</div>
+<div class="corner-flourish bottom-left">
+<svg viewbox="0 0 100 100">
+<path d="M10,90 Q10,50 30,30 Q50,10 90,10 M20,80 Q20,45 40,25 M15,70 C25,55 35,45 55,35 Q70,25 80,15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="30" cy="30" fill="currentColor" r="4"></circle>
+<circle cx="15" cy="50" fill="currentColor" r="3"></circle>
+<circle cx="50" cy="15" fill="currentColor" r="3"></circle>
+</svg>
+</div>
+<div class="corner-flourish bottom-right">
+<svg viewbox="0 0 100 100">
+<path d="M10,90 Q10,50 30,30 Q50,10 90,10 M20,80 Q20,45 40,25 M15,70 C25,55 35,45 55,35 Q70,25 80,15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="30" cy="30" fill="currentColor" r="4"></circle>
+<circle cx="15" cy="50" fill="currentColor" r="3"></circle>
+<circle cx="50" cy="15" fill="currentColor" r="3"></circle>
+</svg>
+</div>
+<div class="inner-frame"></div>
+<div class="container">
+<!-- Phase 1: Introduction -->
+<div class="phase fade-in" id="intro">
+<h1>🩺 QUI EST MÉDECIN ?</h1>
+<p class="subtitle">Un jeu pour révéler tes biais (et ceux de l'IA)</p>
+<div class="retro-separator">
+<span class="flourish">❧</span>
+</div>
+<div class="intro-text">
+<p><strong>📋 LES RÈGLES :</strong></p>
+<p>Tu vas voir 14 photos de personnes. Certaines sont médecins, d'autres non.</p>
+<p>Pour chaque photo, tu dois décider rapidement : <strong>MÉDECIN</strong> ou <strong>PAS MÉDECIN</strong>.</p>
+</div>
+<button class="retro-btn-pill" onclick="startGame()">
+<span class="retro-btn-pill-text">Commencer le jeu</span>
+<span class="retro-btn-pill-icon">»</span>
+</button>
+</div>
+<!-- Phase 2: Jeu -->
+<div class="phase hidden" id="game">
+<div class="phase-indicator">PHASE 1 : TES CHOIX</div>
+<div class="counter" id="counter">PHOTO 1/14</div>
+<div class="image-container">
+<img alt="Personne à identifier" id="currentImage" src=""/>
+</div>
+<div class="buttons">
+<button class="retro-btn-pill btn-choice" onclick="makeChoice(true)">
+<span class="retro-btn-pill-text">✓ MÉDECIN</span>
+<span class="retro-btn-pill-icon">+</span>
+</button>
+<button class="retro-btn-pill btn-choice" onclick="makeChoice(false)">
+<span class="retro-btn-pill-text">✗ PAS MÉDECIN</span>
+<span class="retro-btn-pill-icon">−</span>
+</button>
+</div>
+</div>
+<!-- Phase 3: Résultats -->
+<div class="phase hidden" id="results">
+<div class="phase-indicator">PHASE 2 : LE REVEAL</div>
+<h2>TES RÉSULTATS</h2>
+<div class="stats">
+<div class="stat-card">
+<div class="stat-label">Score</div>
+<div class="stat-number" id="scorePercent">0%</div>
+<div class="stat-label">de bonnes réponses</div>
+</div>
+<div class="stat-card">
+<div class="stat-label">Biais détecté</div>
+<div class="stat-number" id="biasScore">0</div>
+<div class="stat-label">points de stéréotype</div>
+</div>
+</div>
+<div id="scoreInterpretation"></div>
+<div class="retro-separator">
+<span class="flourish">✿</span>
+</div>
+<div class="results-grid" id="resultsGrid"></div>
+<button class="retro-btn-pill" onclick="showBiasAnalysis()">
+<span class="retro-btn-pill-text">Analyser mes biais</span>
+<span class="retro-btn-pill-icon">»</span>
+</button>
+</div>
+<!-- Phase 4: Analyse des biais -->
+<div class="phase hidden" id="biasAnalysis">
+<div class="phase-indicator">PHASE 3 : ANALYSE DE TES BIAIS</div>
+<h2>🔍 CE QUE TES CHOIX RÉVÈLENT</h2>
+<div id="biasContent"></div>
+<div class="retro-separator">
+<span class="flourish">⚘</span>
+</div>
+<button class="retro-btn-pill" onclick="showAIPrediction()">
+<span class="retro-btn-pill-text">Et si une IA apprenait de mes choix ?</span>
+<span class="retro-btn-pill-icon">»</span>
+</button>
+</div>
+<!-- Phase 5: Prédiction IA -->
+<div class="phase hidden" id="aiPrediction">
+<div class="phase-indicator">PHASE 4 : L'IA FORMÉE SUR TES BIAIS</div>
+<h2>🤖 SI UNE IA ÉTAIT ENTRAÎNÉE SUR TES RÉPONSES...</h2>
+<div class="info-box">
+<h3>💡 COMMENT ÇA MARCHE ?</h3>
+<p>L'IA a observé tes choix et a appris un <strong>motif</strong> : tu as systématiquement choisi certains profils comme médecins et ignoré d'autres.</p>
+<p>Comme une IA ne fait qu'imiter ce qu'elle voit dans ses données d'entraînement, elle a transformé <strong>tes biais inconscients</strong> en règle automatique.</p>
+</div>
+<div class="ai-prediction">
+<h3>ELLE CRÉERAIT CETTE RÈGLE :</h3>
+<div class="ai-rule" id="aiRule"></div>
+<p style="margin-top: 18px;"><strong>Conséquence :</strong> <span id="aiConsequence"></span></p>
+</div>
+<div class="retro-separator">
+<span class="flourish">❀</span>
+</div>
+<button class="retro-btn-pill" onclick="showDiscussion()">
+<span class="retro-btn-pill-text">Comprendre les biais IA</span>
+<span class="retro-btn-pill-icon">»</span>
+</button>
+</div>
+<!-- Phase 6: Discussion enrichie -->
+<div class="phase hidden" id="discussion">
+<div class="phase-indicator">PHASE 5 : COMPRENDRE LES BIAIS DE L'IA</div>
+<h2>🪞 L'IA EST UN MIROIR DÉFORMANT</h2>
+<!-- Mirror Box -->
+<div class="mirror-box">
+<h3>L'IA NE CRÉE RIEN DE NOUVEAU</h3>
+<p>Quand tu demandes à une IA de créer une image, elle ne « réfléchit » pas. Elle <strong>reproduit les schémas</strong> qu'elle a vus le plus souvent dans ses données d'entraînement : des millions d'images récupérées sur Internet.</p>
+</div>
+<div class="info-box">
+<h3>🌐 INTERNET N'EST PAS NEUTRE</h3>
+<p>L'IA apprend sur des images qui viennent de publicités (stéréotypes de genre), de films/séries (rôles stéréotypés), de banques d'images (sur-représentation de personnes blanches, jeunes), et des réseaux sociaux (filtres de beauté, contenus occidentaux).</p>
+</div>
+<div class="retro-separator">
+<span class="flourish">✿</span>
+</div>
+<!-- Types de biais -->
+<h2>📊 LES 5 TYPES DE BIAIS</h2>
+<div class="bias-types-grid">
+<div class="bias-type-card">
+<div class="icon">👤</div>
+<h4>Biais de genre</h4>
+<p>Association automatique d'un genre à un métier ou une activité.</p>
+<div class="example">« Infirmier » → femme • « PDG » → homme</div>
+</div>
+<div class="bias-type-card">
+<div class="icon">🌍</div>
+<h4>Biais culturel</h4>
+<p>Vision occidentale présentée comme la « norme » mondiale.</p>
+<div class="example">« Mariage » → robe blanche, église</div>
+</div>
+<div class="bias-type-card">
+<div class="icon">✨</div>
+<h4>Biais de beauté</h4>
+<p>Sur-représentation des standards de beauté dominants.</p>
+<div class="example">« Personne heureuse » → jeune, mince</div>
+</div>
+<div class="bias-type-card">
+<div class="icon">👔</div>
+<h4>Biais de pouvoir</h4>
+<p>Association entre autorité/leadership et certains profils.</p>
+<div class="example">« Chef d'équipe » → homme au centre</div>
+</div>
+<div class="bias-type-card">
+<div class="icon">🏆</div>
+<h4>Biais de réussite</h4>
+<p>Vision étroite du « succès » (argent, ville, costume).</p>
+<div class="example">« Réussite » → homme, costume, bureau</div>
+</div>
+</div>
+<div class="retro-separator">
+<span class="flourish">⚘</span>
+</div>
+<!-- Cercle vicieux -->
+<div class="cycle-container">
+<h3>⚠️ LE CERCLE VICIEUX DES BIAIS</h3>
+<div class="cycle-steps">
+<div class="cycle-step">📷 Images stéréotypées sur Internet</div>
+<div class="cycle-arrow">→</div>
+<div class="cycle-step">🤖 L'IA apprend ces stéréotypes</div>
+<div class="cycle-arrow">→</div>
+<div class="cycle-step">🖼️ L'IA crée de nouvelles images biaisées</div>
+<div class="cycle-arrow">→</div>
+<div class="cycle-step">🌐 Ces images circulent sur Internet</div>
+<div class="cycle-arrow">→</div>
+<div class="cycle-step">👥 Les internautes sont influencés par les images d'internet</div>
+<div class="cycle-arrow">→</div>
+<div class="cycle-step">🔄 Et le cycle recommence...</div>
+</div>
+<div class="cycle-warning">
                         💥 Si ces images sont utilisées dans les manuels, les pubs, les médias... elles renforcent l'idée que certains profils sont « normaux » et d'autres non !
                     </div>
-                </div>
-
-                <!-- Questions esprit critique -->
-                <div class="critical-questions">
-                    <h3>🧠 DÉVELOPPE TON ESPRIT CRITIQUE</h3>
-                    <p style="margin-bottom: 15px; color: var(--retro-ink);">Face à une image générée par IA, pose-toi ces questions :</p>
-                    <ul>
-                        <li><strong>Qui est représenté ?</strong> (genre, âge, origine apparente)</li>
-                        <li><strong>Qui est absent ?</strong> (personnes âgées, handicap, diversité)</li>
-                        <li><strong>Cette image reflète-t-elle la diversité du monde réel ?</strong></li>
-                        <li><strong>Quels stéréotypes cette image pourrait-elle renforcer ?</strong></li>
-                    </ul>
-                </div>
-
-                <div class="retro-separator">
-                    <span class="flourish">❀</span>
-                </div>
-
-                <!-- Questions de discussion groupe -->
-                <div class="discussion-questions">
-                    <h3>💬 À DISCUTER EN GROUPE</h3>
-                    <ul>
-                        <li>D'où viennent ces stéréotypes que tu as utilisés pour juger ?</li>
-                        <li>Si cette IA était utilisée pour trier des CV de médecins, qui serait discriminé ?</li>
-                        <li>Comment les vraies IA apprennent-elles ces biais ?</li>
-                        <li>Qui décide des données sur lesquelles on entraîne une IA ?</li>
-                        <li>Peut-on créer une IA « neutre » ? Est-ce seulement possible ?</li>
-                    </ul>
-                </div>
-
-                <!-- Retenir box -->
-                <div class="retenir-box">
-                    <h3>📚 CE QU'IL FAUT RETENIR</h3>
-                    <p><strong>1. Tes biais deviennent les biais de l'IA.</strong> L'IA apprend en observant des exemples. Si ces exemples reflètent nos stéréotypes (comme associer « médecin » à « homme blanc »), l'IA les reproduira automatiquement. <em>Tes choix d'aujourd'hui = les discriminations automatiques de demain.</em></p>
-                    <p><strong>2. Nos biais personnels sont souvent inconscients.</strong> Tu ne choisis pas volontairement de discriminer, mais ton cerveau utilise des raccourcis basés sur ce que tu vois dans les médias, les séries, ton entourage.</p>
-                    <p><strong>3. Le cercle vicieux amplifie tout.</strong> Des IA biaisées sont déjà utilisées pour recruter, diagnostiquer, accorder des prêts... Elles discriminent des millions de personnes en reproduisant NOS propres préjugés à grande échelle.</p>
-                </div>
-                
-                <div class="buttons">
-                    <button class="retro-btn-pill" onclick="showLaboIA()">
-                        <span class="retro-btn-pill-text">🧪 Tester les biais d'une IA génératrice</span>
-                        <span class="retro-btn-pill-icon">»</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Phase 7: Labo IA - Test génération d'images -->
-            <div id="laboIA" class="phase hidden">
-                <div class="phase-indicator">PHASE 6 : LABO IA — GÉNÉRATION D'IMAGES</div>
-                <h2>🧪 TESTE LES BIAIS TOI-MÊME</h2>
-                
-                <div class="info-box">
-                    <h3>🎯 L'EXPÉRIENCE</h3>
-                    <p>Utilise un générateur d'images IA (DALL-E, Midjourney, Copilot, etc.) avec ces 5 prompts. Observe les résultats et note ce que tu vois.</p>
-                    <p><strong>Méthode :</strong> Génère 3-4 images par prompt pour avoir des résultats significatifs.</p>
-                </div>
-
-                <!-- Prompt 1 -->
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <span class="prompt-number">PROMPT 1</span>
-                        <span class="prompt-bias-tag">Biais de genre + pouvoir</span>
-                    </div>
-                    <div class="prompt-body">
-                        <div class="prompt-text">"un groupe de 10 scientifiques en réunion"</div>
-                        <div class="prompt-translation">→ Observe bien qui dirige et qui écoute</div>
-                        <div class="prompt-questions">
-                            <h4>🔍 Questions d'observation :</h4>
-                            <ul>
-                                <li>Combien d'hommes ? Combien de femmes ?</li>
-                                <li>Qui semble « diriger » la réunion ? (position centrale, debout, qui parle)</li>
-                                <li>Y a-t-il de la diversité d'âge et d'origine ?</li>
-                            </ul>
+</div>
+<!-- Questions esprit critique -->
+<div class="critical-questions">
+<h3>🧠 DÉVELOPPE TON ESPRIT CRITIQUE</h3>
+<p style="margin-bottom: 15px; color: var(--retro-ink);">Face à une image générée par IA, pose-toi ces questions :</p>
+<ul>
+<li><strong>Qui est représenté ?</strong> (genre, âge, origine apparente)</li>
+<li><strong>Qui est absent ?</strong> (personnes âgées, handicap, diversité)</li>
+<li><strong>Cette image reflète-t-elle la diversité du monde réel ?</strong></li>
+<li><strong>Quels stéréotypes cette image pourrait-elle renforcer ?</strong></li>
+</ul>
+</div>
+<div class="retro-separator">
+<span class="flourish">❀</span>
+</div>
+<!-- Questions de discussion groupe -->
+<div class="discussion-questions">
+<h3>💬 À DISCUTER EN GROUPE</h3>
+<ul>
+<li>D'où viennent ces stéréotypes que tu as utilisés pour juger ?</li>
+<li>Si cette IA était utilisée pour trier des CV de médecins, qui serait discriminé ?</li>
+<li>Comment les vraies IA apprennent-elles ces biais ?</li>
+<li>Qui décide des données sur lesquelles on entraîne une IA ?</li>
+<li>Peut-on créer une IA « neutre » ? Est-ce seulement possible ?</li>
+</ul>
+</div>
+<!-- Retenir box -->
+<div class="retenir-box">
+<h3>📚 CE QU'IL FAUT RETENIR</h3>
+<p><strong>1. Tes biais deviennent les biais de l'IA.</strong> L'IA apprend en observant des exemples. Si ces exemples reflètent nos stéréotypes (comme associer « médecin » à « homme blanc »), l'IA les reproduira automatiquement. <em>Tes choix d'aujourd'hui = les discriminations automatiques de demain.</em></p>
+<p><strong>2. Nos biais personnels sont souvent inconscients.</strong> Tu ne choisis pas volontairement de discriminer, mais ton cerveau utilise des raccourcis basés sur ce que tu vois dans les médias, les séries, ton entourage.</p>
+<p><strong>3. Le cercle vicieux amplifie tout.</strong> Des IA biaisées sont déjà utilisées pour recruter, diagnostiquer, accorder des prêts... Elles discriminent des millions de personnes en reproduisant NOS propres préjugés à grande échelle.</p>
+</div>
+<div class="buttons">
+<button class="retro-btn-pill" onclick="showLaboIA()">
+<span class="retro-btn-pill-text">🧪 Tester les biais d'une IA génératrice</span>
+<span class="retro-btn-pill-icon">»</span>
+</button>
+</div>
+</div>
+<!-- Phase 7: Labo IA - Test génération d'images -->
+<div class="phase hidden" id="laboIA">
+<div class="phase-indicator">PHASE 6 : LABO IA — GÉNÉRATION D'IMAGES</div>
+<h2>🧪 TESTE LES BIAIS TOI-MÊME</h2>
+<div class="info-box">
+<h3>🎯 L'EXPÉRIENCE</h3>
+<p>Utilise un générateur d'images IA (DALL-E, Midjourney, Copilot, etc.) avec ces 5 prompts. Observe les résultats et note ce que tu vois.</p>
+<p><strong>Méthode :</strong> Génère 3-4 images par prompt pour avoir des résultats significatifs.</p>
+</div>
+<!-- Prompt 1 -->
+<div class="prompt-card">
+<div class="prompt-header">
+<span class="prompt-number">PROMPT 1</span>
+<span class="prompt-bias-tag">Biais de genre + pouvoir</span>
+</div>
+<div class="prompt-body">
+<div class="prompt-text">"un groupe de 10 scientifiques en réunion"</div>
+<div class="prompt-translation">→ Observe bien qui dirige et qui écoute</div>
+<div class="prompt-questions">
+<h4>🔍 Questions d'observation :</h4>
+<ul>
+<li>Combien d'hommes ? Combien de femmes ?</li>
+<li>Qui semble « diriger » la réunion ? (position centrale, debout, qui parle)</li>
+<li>Y a-t-il de la diversité d'âge et d'origine ?</li>
+</ul>
+</div>
+<div class="prompt-expected">
+<strong>Biais attendu :</strong> Sur-représentation masculine, homme au centre = leader
                         </div>
-                        <div class="prompt-expected">
-                            <strong>Biais attendu :</strong> Sur-représentation masculine, homme au centre = leader
+</div>
+</div>
+<!-- Prompt 2 -->
+<div class="prompt-card">
+<div class="prompt-header">
+<span class="prompt-number">PROMPT 2</span>
+<span class="prompt-bias-tag">Biais culturel</span>
+</div>
+<div class="prompt-body">
+<div class="prompt-text">"une cérémonie de mariage"</div>
+<div class="prompt-translation">→ Quel type de mariage l'IA va-t-elle représenter ?</div>
+<div class="prompt-questions">
+<h4>🔍 Questions d'observation :</h4>
+<ul>
+<li>Quel type de cérémonie est représenté ? (religieux, civil, traditionnel)</li>
+<li>Comment sont habillés les mariés ?</li>
+<li>Dans quel type de lieu ?</li>
+</ul>
+</div>
+<div class="prompt-expected">
+<strong>Biais attendu :</strong> Mariage « à l'occidentale » (robe blanche, église) présenté comme norme
                         </div>
-                    </div>
-                </div>
-
-                <!-- Prompt 2 -->
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <span class="prompt-number">PROMPT 2</span>
-                        <span class="prompt-bias-tag">Biais culturel</span>
-                    </div>
-                    <div class="prompt-body">
-                        <div class="prompt-text">"une cérémonie de mariage"</div>
-                        <div class="prompt-translation">→ Quel type de mariage l'IA va-t-elle représenter ?</div>
-                        <div class="prompt-questions">
-                            <h4>🔍 Questions d'observation :</h4>
-                            <ul>
-                                <li>Quel type de cérémonie est représenté ? (religieux, civil, traditionnel)</li>
-                                <li>Comment sont habillés les mariés ?</li>
-                                <li>Dans quel type de lieu ?</li>
-                            </ul>
+</div>
+</div>
+<!-- Prompt 3 -->
+<div class="prompt-card">
+<div class="prompt-header">
+<span class="prompt-number">PROMPT 3</span>
+<span class="prompt-bias-tag">Biais de réussite</span>
+</div>
+<div class="prompt-body">
+<div class="prompt-text">"une personne qui a réussi dans la vie"</div>
+<div class="prompt-translation">→ Comment l'IA représente-t-elle le succès ?</div>
+<div class="prompt-questions">
+<h4>🔍 Questions d'observation :</h4>
+<ul>
+<li>Genre de la personne ?</li>
+<li>Comment est-elle habillée ?</li>
+<li>Dans quel environnement ?</li>
+<li>Qu'est-ce que cette image dit de la « réussite » selon l'IA ?</li>
+</ul>
+</div>
+<div class="prompt-expected">
+<strong>Biais attendu :</strong> Homme blanc, costume, bureau urbain = vision étroite du succès
                         </div>
-                        <div class="prompt-expected">
-                            <strong>Biais attendu :</strong> Mariage « à l'occidentale » (robe blanche, église) présenté comme norme
+</div>
+</div>
+<!-- Prompt 4 -->
+<div class="prompt-card">
+<div class="prompt-header">
+<span class="prompt-number">PROMPT 4</span>
+<span class="prompt-bias-tag">Biais de beauté</span>
+</div>
+<div class="prompt-body">
+<div class="prompt-text">"une personne heureuse"</div>
+<div class="prompt-translation">→ À quoi ressemble le bonheur selon l'IA ?</div>
+<div class="prompt-questions">
+<h4>🔍 Questions d'observation :</h4>
+<ul>
+<li>Quel âge semble avoir la personne ?</li>
+<li>Quel type de physique ?</li>
+<li>Voit-on des personnes âgées, en situation de handicap, de morphologies diverses ?</li>
+</ul>
+</div>
+<div class="prompt-expected">
+<strong>Biais attendu :</strong> Jeune, mince, « parfait » — standards de beauté dominants
                         </div>
-                    </div>
-                </div>
-
-                <!-- Prompt 3 -->
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <span class="prompt-number">PROMPT 3</span>
-                        <span class="prompt-bias-tag">Biais de réussite</span>
-                    </div>
-                    <div class="prompt-body">
-                        <div class="prompt-text">"une personne qui a réussi dans la vie"</div>
-                        <div class="prompt-translation">→ Comment l'IA représente-t-elle le succès ?</div>
-                        <div class="prompt-questions">
-                            <h4>🔍 Questions d'observation :</h4>
-                            <ul>
-                                <li>Genre de la personne ?</li>
-                                <li>Comment est-elle habillée ?</li>
-                                <li>Dans quel environnement ?</li>
-                                <li>Qu'est-ce que cette image dit de la « réussite » selon l'IA ?</li>
-                            </ul>
+</div>
+</div>
+<!-- Prompt 5 -->
+<div class="prompt-card">
+<div class="prompt-header">
+<span class="prompt-number">PROMPT 5</span>
+<span class="prompt-bias-tag">Biais domestique</span>
+</div>
+<div class="prompt-body">
+<div class="prompt-text">"un parent qui prépare le dîner pour sa famille"</div>
+<div class="prompt-translation">→ Qui l'IA va-t-elle mettre aux fourneaux ?</div>
+<div class="prompt-questions">
+<h4>🔍 Questions d'observation :</h4>
+<ul>
+<li>Qui cuisine ? Un homme ou une femme ?</li>
+<li>Comment est organisée la scène ?</li>
+<li>Où est l'autre parent ?</li>
+</ul>
+</div>
+<div class="prompt-expected">
+<strong>Biais attendu :</strong> Femme qui cuisine — stéréotype domestique
                         </div>
-                        <div class="prompt-expected">
-                            <strong>Biais attendu :</strong> Homme blanc, costume, bureau urbain = vision étroite du succès
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Prompt 4 -->
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <span class="prompt-number">PROMPT 4</span>
-                        <span class="prompt-bias-tag">Biais de beauté</span>
-                    </div>
-                    <div class="prompt-body">
-                        <div class="prompt-text">"une personne heureuse"</div>
-                        <div class="prompt-translation">→ À quoi ressemble le bonheur selon l'IA ?</div>
-                        <div class="prompt-questions">
-                            <h4>🔍 Questions d'observation :</h4>
-                            <ul>
-                                <li>Quel âge semble avoir la personne ?</li>
-                                <li>Quel type de physique ?</li>
-                                <li>Voit-on des personnes âgées, en situation de handicap, de morphologies diverses ?</li>
-                            </ul>
-                        </div>
-                        <div class="prompt-expected">
-                            <strong>Biais attendu :</strong> Jeune, mince, « parfait » — standards de beauté dominants
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Prompt 5 -->
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <span class="prompt-number">PROMPT 5</span>
-                        <span class="prompt-bias-tag">Biais domestique</span>
-                    </div>
-                    <div class="prompt-body">
-                        <div class="prompt-text">"un parent qui prépare le dîner pour sa famille"</div>
-                        <div class="prompt-translation">→ Qui l'IA va-t-elle mettre aux fourneaux ?</div>
-                        <div class="prompt-questions">
-                            <h4>🔍 Questions d'observation :</h4>
-                            <ul>
-                                <li>Qui cuisine ? Un homme ou une femme ?</li>
-                                <li>Comment est organisée la scène ?</li>
-                                <li>Où est l'autre parent ?</li>
-                            </ul>
-                        </div>
-                        <div class="prompt-expected">
-                            <strong>Biais attendu :</strong> Femme qui cuisine — stéréotype domestique
-                        </div>
-                    </div>
-                </div>
-
-                <div class="retro-separator">
-                    <span class="flourish">✾</span>
-                </div>
-
-                <!-- Contre-prompts -->
-                <div class="counter-prompt-box">
-                    <h3>⚡ BONUS : LE CONTRE-PROMPT</h3>
-                    <p>Après avoir identifié les biais, reformule un prompt pour obtenir une image moins biaisée. Cela montre que <strong>l'utilisateur a un pouvoir</strong> sur les résultats !</p>
-                    <div class="counter-examples">
-                        <div class="counter-example">
-                            <span class="before">"une personne qui a réussi"</span>
-                            <span class="arrow">→</span>
-                            <span class="after">"une agricultrice épanouie dans son champ"</span>
-                        </div>
-                        <div class="counter-example">
-                            <span class="before">"un groupe de scientifiques"</span>
-                            <span class="arrow">→</span>
-                            <span class="after">"un groupe de scientifiques d'âges, de genres et d'origines variés"</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Synthèse finale -->
-                <div class="retenir-box">
-                    <h3>🎓 SYNTHÈSE : TU ES MAINTENANT UN·E PILOTE DE L'IA</h3>
-                    <p>Tu sais maintenant que <strong>l'IA n'est pas neutre</strong> : elle reproduit et amplifie les stéréotypes présents dans ses données d'entraînement.</p>
-                    <p><strong>Face à une image générée, pose-toi toujours la question :</strong> <em>Est-ce la réalité, ou est-ce le reflet des biais de notre société ?</em></p>
-                    <p>Tu as le pouvoir d'être un utilisateur critique et responsable. <strong>Utilise-le.</strong></p>
-                </div>
-                
-                <div class="buttons" style="flex-direction: column; align-items: center; gap: 16px;">
-                    <button class="retro-btn-pill" onclick="restart()">
-                        <span class="retro-btn-pill-text">Recommencer le jeu</span>
-                        <span class="retro-btn-pill-icon">↻</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
+</div>
+</div>
+<div class="retro-separator">
+<span class="flourish">✾</span>
+</div>
+<!-- Contre-prompts -->
+<div class="counter-prompt-box">
+<h3>⚡ BONUS : LE CONTRE-PROMPT</h3>
+<p>Après avoir identifié les biais, reformule un prompt pour obtenir une image moins biaisée. Cela montre que <strong>l'utilisateur a un pouvoir</strong> sur les résultats !</p>
+<div class="counter-examples">
+<div class="counter-example">
+<span class="before">"une personne qui a réussi"</span>
+<span class="arrow">→</span>
+<span class="after">"une agricultrice épanouie dans son champ"</span>
+</div>
+<div class="counter-example">
+<span class="before">"un groupe de scientifiques"</span>
+<span class="arrow">→</span>
+<span class="after">"un groupe de scientifiques d'âges, de genres et d'origines variés"</span>
+</div>
+</div>
+</div>
+<!-- Synthèse finale -->
+<div class="retenir-box">
+<h3>🎓 SYNTHÈSE : TU ES MAINTENANT UN·E PILOTE DE L'IA</h3>
+<p>Tu sais maintenant que <strong>l'IA n'est pas neutre</strong> : elle reproduit et amplifie les stéréotypes présents dans ses données d'entraînement.</p>
+<p><strong>Face à une image générée, pose-toi toujours la question :</strong> <em>Est-ce la réalité, ou est-ce le reflet des biais de notre société ?</em></p>
+<p>Tu as le pouvoir d'être un utilisateur critique et responsable. <strong>Utilise-le.</strong></p>
+</div>
+<div class="buttons" style="flex-direction: column; align-items: center; gap: 16px;">
+<button class="retro-btn-pill" onclick="restart()">
+<span class="retro-btn-pill-text">Recommencer le jeu</span>
+<span class="retro-btn-pill-icon">↻</span>
+</button>
+</div>
+</div>
+</div>
+<div class="ab-attribution" style="text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(128,128,128,0.25);font-size:0.8rem;opacity:0.65;">
+<a href="https://www.linkedin.com/in/antonin-bareau/" rel="noopener" style="font-weight:bold;color:inherit;text-decoration:none;" target="_blank">Antonin Bareau</a>
+   — 
+  <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener" style="color:inherit;text-decoration:none;" target="_blank">Licence CC BY-SA 4.0</a>
+</div></div>
+<script>
         // Base de données des images avec leurs métadonnées
         const images = [
             { src: 'femme_afro_blouse.jpg', isDoctor: false, gender: 'femme', ethnicity: 'afro', attire: 'blouse' },
@@ -1530,11 +1479,6 @@
                     <div class="ai-prediction">
                         <h3>✓ BRAVO !</h3>
                         <p>Tu as fait très peu d'erreurs basées sur des stéréotypes. Ton esprit critique est bien aiguisé !</p>
-                    <div class="ab-attribution" style="text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(128,128,128,0.25);font-size:0.8rem;opacity:0.65;">
-  <a href="https://www.linkedin.com/in/antonin-bareau/" target="_blank" rel="noopener" style="font-weight:bold;color:inherit;text-decoration:none;">Antonin Bareau</a>
-  &nbsp;&mdash;&nbsp;
-  <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Licence CC BY-SA 4.0</a>
-</div>
 </div>
                 `;
             }
@@ -1602,6 +1546,5 @@
             document.getElementById('intro').classList.remove('hidden');
         }
     </script>
-
 </body>
 </html>
